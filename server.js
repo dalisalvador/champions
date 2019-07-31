@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const champions = require("./routes/api/champions");
+const axios = require("axios");
 
 const app = express();
 
@@ -21,4 +22,13 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const port = process.env.PORT || 5000;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+app.listen(port, () => {
+  keepAwake();
+  console.log(`Server running on port ${port}`);
+});
+
+function keepAwake() {
+  setInterval(function() {
+    axios.get("https://champions-bsit.herokuapp.com");
+  }, 60000); // every 1min
+}
