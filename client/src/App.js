@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
@@ -9,6 +9,8 @@ import Footer from "./Components/Footer/Footer";
 
 function App() {
   const [champions, setChampions] = useState([]);
+  const el = useRef(null);
+
   useEffect(() => {
     if (isEmpty(champions)) {
       //lastId = -1 means take the two first
@@ -16,6 +18,10 @@ function App() {
     }
     //eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [champions]);
 
   //Get lastChampions. Qty is fixed to 2 (load more), but could be any number
   const getChampions = async (lastId, qty) => {
@@ -25,8 +31,12 @@ function App() {
     });
   };
 
+  const scrollToBottom = () => {
+    el.current.scrollIntoView({ behavior: "smooth", block: "end" });
+  };
+
   return (
-    <div className="App App-header">
+    <div className="App App-header" ref={el}>
       <Header />
       <List champions={champions} />
       <Footer champions={champions} getChampions={getChampions} />
